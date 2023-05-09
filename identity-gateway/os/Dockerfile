@@ -7,7 +7,7 @@
 # or with one of its affiliates. All use shall be exclusively subject
 # to such license between the licensee and ForgeRock AS.
 #
-FROM openjdk:11-jdk-slim
+FROM eclipse-temurin:11-jammy
 RUN jlink --compress=2 \
           --no-header-files \
           --no-man-pages \
@@ -17,8 +17,8 @@ java.security.sasl,java.sql,jdk.security.auth,jdk.unsupported,java.datatransfer,
 java.sql.rowset,java.transaction.xa,java.xml,java.xml.crypto,jdk.xml.dom,\
 jdk.crypto.ec,jdk.crypto.cryptoki,jdk.jfr,jdk.jcmd,jdk.jdwp.agent,jdk.naming.dns,jdk.zipfs,jdk.management.agent \
           --output /opt/jdk \
-   && cp /usr/local/openjdk-11/bin/jstack /opt/jdk/bin \
-   && cp /usr/local/openjdk-11/bin/jps /opt/jdk/bin \
+   && cp /opt/java/openjdk/bin/jstack /opt/jdk/bin \
+   && cp /opt/java/openjdk/bin/jps /opt/jdk/bin \
    && apt-get update && apt-get install -y binutils wget \
    && strip -p --strip-unneeded /opt/jdk/lib/server/libjvm.so
 
@@ -34,9 +34,9 @@ RUN mkdir -p /opt/async-profiler && \
     | tar xzv -C /opt/async-profiler
 
 
-FROM debian:buster-slim
+#FROM debian:buster-slim
 # TODO: Upgrade to bullseye whehn pipeline is stable
-# FROM debian:bullseye-slim
+FROM debian:bullseye-slim
 
 
 COPY --from=0 /opt /opt
