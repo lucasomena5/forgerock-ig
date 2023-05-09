@@ -64,14 +64,14 @@ pipeline {
 		    }
 		}
 
-        stage('Git Checkout') {
-            steps {
-                script {
+        // stage('Git Checkout') {
+        //     steps {
+        //         script {
 
                     
-                }
-            }
-        }
+        //         }
+        //     }
+        // }
         
         stage('Build Docker Image') {
             steps {
