@@ -21,7 +21,7 @@ pipeline {
 		        withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
 		            // avoid using credentials in groovy string interpolation
                     sh label: 'Login to docker registry', script: '''
-                                docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD '''
+                                docker login --username $DOCKER_USERNAME --password-stdin $DOCKER_PASSWORD '''
  
 		        }
 		    }
