@@ -10,6 +10,7 @@ pipeline {
 
 				sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Install pre-requisites...\""""
 				sh "sudo apt-get update -y"
+				sh "sudo apt-get install -y git docker-cli"
 
 				// if (env.BRANCH_NAME == 'master') {
                     
@@ -19,9 +20,9 @@ pipeline {
                 //     sudo yum install -y docker-cli
                 // }
 
-		        withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-		            sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
-		        }
+		        // withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+		        //     sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
+		        // }
 		    }
 		}
         
