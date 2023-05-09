@@ -20,6 +20,9 @@ pipeline {
                 //     sudo yum install -y docker-cli
                 // }
 
+				withDockerRegistry([url: '', credentialsId: 'docker-hub-credentials']) {
+                    sh 'docker push nginx'
+                }
 		        // withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
 		        //     sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
 		        // }
