@@ -67,8 +67,9 @@ pipeline {
         stage('Git Checkout') {
             steps {
                 script {
-                    git url: 'https://github.com/lucasomena5/forgerock-ig.git',
-                        branch: 'master'
+                    git branch: "master",
+                        url: 'https://github.com/lucasomena5/forgerock-ig.git',
+                        credentialsId: "github-ssh-key"
                 }
             }
         }
@@ -81,12 +82,11 @@ pipeline {
                     def osRepo = "${env.WORKSPACE}/identity-gateway/os"
 
                     sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build docker image...\""""
-                
-                    sh "ls -lah ${env.WORKSPACE}"
+        
                     sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building application base image...\""""
                     
                     sh "ls -lha"
-                    sh "cd identity-gateway"
+                    sh "ls -lha identity-gateway"
                     sh "ls -lah"
                     sh "docker ps -a"
                     //sh "docker build ${applicationRepo}/Dockerfile -t ig:v${BUILD_NUMBER}"
