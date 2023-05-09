@@ -67,7 +67,7 @@ pipeline {
         stage('Git Checkout') {
             steps {
                 script {
-                    git url: 'git@github.com:lucasomena5/forgerock-ig.git',
+                    git url: 'https://github.com/lucasomena5/forgerock-ig.git',
                         branch: 'master'
                 }
             }
