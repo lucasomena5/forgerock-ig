@@ -10,7 +10,7 @@ pipeline {
 
 				sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Install pre-requisites...\""""
 				sh "sudo apt-get update -y"
-				sh "sudo apt-get install -y git docker-cli"
+				sh "sudo apt-get install -y git docker-ce-cli"
 
 				// if (env.BRANCH_NAME == 'master') {
                     
