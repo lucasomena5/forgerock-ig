@@ -64,14 +64,14 @@ pipeline {
 		    }
 		}
 
-        // stage('Git Checkout') {
-        //     steps {
-        //         script {
-
-                    
-        //         }
-        //     }
-        // }
+        stage('Git Checkout') {
+            steps {
+                script {
+                    git url: 'git@github.com:lucasomena5/forgerock-ig.git',
+                        branch: 'master'
+                }
+            }
+        }
         
         stage('Build Docker Image') {
             steps {
