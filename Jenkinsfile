@@ -2,6 +2,7 @@ pipeline {
     agent any
 	environment {
         dockerCredential = credentials('docker-hub-credentials')
+        repoName = "devforge1"
     }
     
     stages {
@@ -23,6 +24,13 @@ pipeline {
                     sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build docker image...\""""
                 
                     sh "ls -lah ${env.WORKSPACE}"
+                    sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building os base image...\""""
+                    sh "cd ${env.WORKSPACE}/identity-gateway/os"
+
+                    sh "docker build . -t ig:v${BUILD_NUMBER}"
+                    sh "docker tag ig:v${BUILD_NUMBER} ${repoName}/ig:v${BUILD_NUMBER}"
+                    sh "docker ps -a"
+                    //sh "docker push devforge1/ig:v${BUILD_NUMBER}"
                 }
             }
         }
