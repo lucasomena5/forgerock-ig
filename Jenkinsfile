@@ -20,8 +20,7 @@ pipeline {
 
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     sh '''
-                        echo "Username: $USERNAME"
-                        echo "Password: $PASSWORD"
+                        docker login -u $USERNAME -p $PASSWORD
                         # Execute authenticated steps here
                     '''
                 }
