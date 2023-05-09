@@ -8,8 +8,8 @@ pipeline {
         stage('Authenticate with Docker Hub') {
 		    steps {
 
-				echo "[INFO] `date '+%Y-%m-%d %H:%M:%S'` Install pre-requisites..."
-				sudo apt-get update -y
+				sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Install pre-requisites...\""""
+				sh "sudo apt-get update -y"
 
 				// if (env.BRANCH_NAME == 'master') {
                     
