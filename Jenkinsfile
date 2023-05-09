@@ -10,13 +10,23 @@ pipeline {
 
 				sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Checking pre-requisites...\""""
 				
-				// if (env.BRANCH_NAME == 'master') {
+                def osName = sh '''cat /etc/*release* | grep DISTRIB_ID | cut -d '=' -f 2'''
+                sh "echo ${env.osName}"
+                
+                if (env.osName == 'Ubuntu') {
                     
-				// 	sudo apt-get install -y docker-cli 
-                // } else {
-                //     sudo yum update -y
-                //     sudo yum install -y docker-cli
-                // }
+                    def isPackageInstalled = true
+                    if (env.isPackageInstalled){
+                        sh '''aws --version'''
+                    }
+                    
+                } else {
+
+                    def isPackageInstalled = true
+                    if (env.isPackageInstalled){
+                        sh '''aws --version'''
+                    }
+                }    
 
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     sh '''docker login -u $USERNAME -p $PASSWORD'''
