@@ -1,0 +1,26 @@
+pipeline{
+	agent any
+	
+	stages{
+		stage('Checkout'){
+			steps{
+				git credentialsId: '', url: ''
+			}
+		}
+    		stage('Setup'){
+      			steps{
+				sh 'echo \'test phase\''
+      			}
+    		}
+    		stage('Test'){
+      			steps{
+				 sh 'echo \'test phase\''
+               }
+   		}
+		stage('invoke playbook'){
+      			steps{
+				
+      			}
+   		}
+	}
+}
