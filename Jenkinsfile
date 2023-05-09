@@ -21,11 +21,15 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
+
+                    def applicationRepo = "${env.WORKSPACE}/identity-gateway/application"
+                    def osRepo = "${env.WORKSPACE}/identity-gateway/os"
+
                     sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build docker image...\""""
                 
                     sh "ls -lah ${env.WORKSPACE}"
-                    sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building os base image...\""""
-                    sh "cd ${env.WORKSPACE}/identity-gateway/os"
+                    sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building application base image...\""""
+                    sh "cd ${env.applicationRepo}"
 
                     sh "docker build . -t ig:v${BUILD_NUMBER}"
                     sh "docker tag ig:v${BUILD_NUMBER} ${repoName}/ig:v${BUILD_NUMBER}"
