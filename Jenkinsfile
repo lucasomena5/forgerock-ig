@@ -21,7 +21,7 @@ pipeline {
             steps {
                 sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build docker image...\""""
                 
-                sh "ls -lah"
+                sh "ls -lah ${env.WORKSPACE}"
                 
                 //sh 'docker build . -t ig:v2023.4.0'
             }
