@@ -85,7 +85,7 @@ pipeline {
                     sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building application base image...\""""
                     
                     cd "${applicationRepo}"
-                    ls -lha .
+                    ls -lha 
                     sh "docker ps -a"
                     //sh "docker build ${applicationRepo}/Dockerfile -t ig:v${BUILD_NUMBER}"
                     //sh "docker tag ig:v${BUILD_NUMBER} ${repoName}/ig:v${BUILD_NUMBER}"
