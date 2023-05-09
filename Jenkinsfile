@@ -68,8 +68,7 @@ pipeline {
             steps {
                 script {
                     git branch: "master",
-                        url: 'https://github.com/lucasomena5/forgerock-ig.git',
-                        credentialsId: "github-ssh-key"
+                        url: 'git@github.com:lucasomena5/forgerock-ig.git'
                 }
             }
         }
@@ -85,9 +84,8 @@ pipeline {
         
                     sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building application base image...\""""
                     
-                    sh "ls -lha"
-                    sh "ls -lha identity-gateway"
-                    sh "ls -lah"
+                    cd "${applicationRepo}"
+                    ls -lha .
                     sh "docker ps -a"
                     //sh "docker build ${applicationRepo}/Dockerfile -t ig:v${BUILD_NUMBER}"
                     //sh "docker tag ig:v${BUILD_NUMBER} ${repoName}/ig:v${BUILD_NUMBER}"
