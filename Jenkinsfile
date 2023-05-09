@@ -13,7 +13,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh 'echo "Building Docker image..."'
-                sh 'docker build -t my-app .'
+                sh 'docker build . -t ig:v2023.4.0'
             }
         }
     }
