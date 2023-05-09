@@ -1,3 +1,26 @@
+properties(
+	[
+		buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '10')), 
+        disableConcurrentBuilds(),
+		parameters(
+			[
+				choice(
+					choices: 
+					[''], 
+					description: 'Select the version', 
+					name: 'VERSION'
+				),
+				choice(
+					choices: 
+					[''], 
+					description: 'Select the application', 
+					name: 'APPLICATION'
+				),
+			]
+		)
+	]
+)
+
 pipeline {
     agent any
 	environment {
@@ -6,7 +29,29 @@ pipeline {
     }
     
     stages {
+
+        stage('Initialization') {
+            steps {
+                script {
+				
+					echo "Clean Workspace ..."
+					ws(WORKSPACE) {
+						cleanWs()
+					}
+
+					String buildID = "#${BUILD_NUMBER} - product".toString()
+
+					currentBuild.displayName = buildID
+					
+                }
+            }
+        }
+
         stage('Authenticate with Docker Hub') {
+            when {
+                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+            }
+            
 		    steps {
                 script {
                     sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Checking pre-requisites...\""""
@@ -15,8 +60,18 @@ pipeline {
                         sh '''docker login -u $USERNAME -p $PASSWORD'''
                     }
                 }
+                
 		    }
 		}
+
+        stage('Git Checkout') {
+            steps {
+                script {
+
+                    
+                }
+            }
+        }
         
         stage('Build Docker Image') {
             steps {
@@ -31,7 +86,7 @@ pipeline {
                     sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building application base image...\""""
                     sh "cd ${applicationRepo}"
 
-                    sh "docker build . -t ig:v${BUILD_NUMBER}"
+                    sh "docker build ${applicationRepo}/Dockerfile -t ig:v${BUILD_NUMBER}"
                     sh "docker tag ig:v${BUILD_NUMBER} ${repoName}/ig:v${BUILD_NUMBER}"
                     sh "docker ps -a"
                     //sh "docker push devforge1/ig:v${BUILD_NUMBER}"
