@@ -77,7 +77,7 @@ pipeline {
             steps {
                 script {
 
-                    def applicationRepo = "${env.WORKSPACE}/identity-gateway/application"
+                    def applicationRepo = "identity-gateway/application"
                     def osRepo = "${env.WORKSPACE}/identity-gateway/os"
 
                     sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build docker image...\""""
