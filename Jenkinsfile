@@ -84,10 +84,10 @@ pipeline {
                 
                     sh "ls -lah ${env.WORKSPACE}"
                     sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building application base image...\""""
-                    sh "cd ${applicationRepo}"
-
+                    
                     sh "ls -lha"
-
+                    sh "cd identity-gateway"
+                    sh "ls -lah"
                     sh "docker ps -a"
                     //sh "docker build ${applicationRepo}/Dockerfile -t ig:v${BUILD_NUMBER}"
                     //sh "docker tag ig:v${BUILD_NUMBER} ${repoName}/ig:v${BUILD_NUMBER}"
