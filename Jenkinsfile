@@ -84,7 +84,7 @@ pipeline {
         
                     sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building application base image...\""""
                     
-                    sh """cd ${env.WORKSPACE}/identity-gateway/"""
+                    sh """cat ${env.WORKSPACE}/identity-gateway/application/Dockerfile"""
                     sh """ls -lha """
                     sh "docker ps -a"
                     //sh "docker build ${applicationRepo}/Dockerfile -t ig:v${BUILD_NUMBER}"
