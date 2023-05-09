@@ -19,10 +19,7 @@ pipeline {
                 // }
 
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    sh '''
-                        docker login -u $USERNAME -p $PASSWORD
-                        # Execute authenticated steps here
-                    '''
+                    sh '''docker login -u $USERNAME -p $PASSWORD'''
                 }
 		    }
 		}
