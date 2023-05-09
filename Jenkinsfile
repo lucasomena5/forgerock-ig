@@ -8,7 +8,7 @@ pipeline {
         stage('Authenticate with Docker Hub') {
 		    steps {
 
-				// sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Install pre-requisites...\""""
+				sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Checking pre-requisites...\""""
 				
 				// if (env.BRANCH_NAME == 'master') {
                     
@@ -18,12 +18,13 @@ pipeline {
                 //     sudo yum install -y docker-cli
                 // }
 
-		        withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-		            // avoid using credentials in groovy string interpolation
-                    sh label: 'Login to docker registry', script: '''
-                                docker login --username $DOCKER_USERNAME --password-stdin $DOCKER_PASSWORD '''
- 
-		        }
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh '''
+                        echo "Username: $USERNAME"
+                        echo "Password: $PASSWORD"
+                        # Execute authenticated steps here
+                    '''
+                }
 		    }
 		}
         
