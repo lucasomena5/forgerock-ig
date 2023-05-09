@@ -8,10 +8,8 @@ pipeline {
         stage('Authenticate with Docker Hub') {
 		    steps {
 
-				sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Install pre-requisites...\""""
-				sh "sudo apt-get update -y"
-				sh "sudo apt-get install -y git docker-ce-cli"
-
+				// sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Install pre-requisites...\""""
+				
 				// if (env.BRANCH_NAME == 'master') {
                     
 				// 	sudo apt-get install -y docker-cli 
