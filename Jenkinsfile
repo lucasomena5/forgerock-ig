@@ -34,11 +34,14 @@ pipeline {
 		    }
 		}
         
-        // stage('Build Docker Image') {
-        //     steps {
-        //         sh 'echo "Building Docker image"'
-        //         sh 'docker build . -t ig:v2023.4.0'
-        //     }
-        // }
+        stage('Build Docker Image') {
+            steps {
+                sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build docker image...\""""
+                
+                sh "ls -lah"
+                
+                //sh 'docker build . -t ig:v2023.4.0'
+            }
+        }
     }
 }
