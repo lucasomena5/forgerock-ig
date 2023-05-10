@@ -25,6 +25,7 @@ pipeline {
     agent any
 	environment {
         dockerCredential = credentials('docker-hub-credentials')
+        gitHubCredential = credentials('jenkins_prudential_key')
         repoName = "devforge1"
     }
     
@@ -80,24 +81,27 @@ pipeline {
                     def applicationRepo = "${env.WORKSPACE}/identity-gateway/application"
                     def osRepo = "${env.WORKSPACE}/identity-gateway/os"
 
-                    sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build docker image...\""""
+                    dir("${applicationRepo}"){
+
+                        sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build docker image...\""""
                     
-                    sh "cat ${applicationRepo}/Dockerfile"
-                    def dockerImage = docker.build("ig:v${BUILD_NUMBER}", "${applicationRepo}/Dockerfile")
+                        sh "cat ${applicationRepo}/Dockerfile"
+                        def dockerImage = docker.build("ig:v${BUILD_NUMBER}", ".")
                     
                     // docker.withRegistry('devforge1', 'docker-hub-credentials') {
                     //     dockerImage.push()
                     // }
 
-                    sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building application base image...\""""
+                    //sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building application base image...\""""
                     
                     //sh """cat ${env.WORKSPACE}/identity-gateway/application/Dockerfile"""
                     //sh """ls -lha """
-                    sh "docker ps -a"
+                        sh "docker ps -a"
                     //sh """docker build ${env.WORKSPACE}/identity-gateway/application/Dockerfile -t ig:v${BUILD_NUMBER}"""
                     //sh "docker tag ig:v${BUILD_NUMBER} ${repoName}/ig:v${BUILD_NUMBER}"
                     //sh "docker ps -a"
                     //sh "docker push devforge1/ig:v${BUILD_NUMBER}"
+                    }
                 }
             }
         }
