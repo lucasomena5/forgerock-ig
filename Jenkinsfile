@@ -13,7 +13,7 @@ pipeline {
         booleanParam(
             name: 'RebuildBaseImage',
             defaultValue: true,
-            description: "Select this option to skip build Base Image"
+            description: "Whether to rebuild the base image"
         )
         // choice(
         //     name: '',
@@ -70,9 +70,7 @@ pipeline {
         
         stage('Build Base Image') {
             when {
-                expression {
-                    params.RebuildBaseImage == true
-                }
+                expression { params.RebuildBaseImage == true }
             }
             steps {
                 script {
