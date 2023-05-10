@@ -26,7 +26,7 @@ pipeline {
 	environment {
         dockerCredential = credentials('docker-hub-credentials')
         gitHubCredential = credentials('jenkins_prudential_key')
-        registry = "devforge1"
+        repoName = "devforge1"
         registryCredential = 'docker-hub-credentials'
     }
     
