@@ -73,7 +73,8 @@ pipeline {
                         //sh """sed -i 's/__BASE_IMAGE_NAME__//g' ${applicationRepo}/Dockerfile"""
                         
                         def dockerImage = docker.build("${repoName}/ig:v${BUILD_NUMBER}", ".")
-                        def baseImageName = dockerImage.id()
+                        def baseImageName = dockerImage.id
+                        sh "echo ${baseImageName}"
 
                         // docker.withRegistry('', "${registryCredential}") {
                         //     dockerImage.push()
