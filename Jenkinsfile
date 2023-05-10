@@ -1,7 +1,10 @@
 properties(
 	[
 		buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '10')), 
-        disableConcurrentBuilds()
+        disableConcurrentBuilds(),
+        parameters {
+            string(name: 'Repo', defaultValue: '', value: 'repoName',description: 'Artifact repository')
+        }
 	]
 )
 
@@ -22,7 +25,7 @@ pipeline {
         stage('Initialization') {
             steps {
                 script {
-				
+                    sh """echo ${repoName}"""
 					echo """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Clean Workspace ...\""""
 					ws(WORKSPACE) {
 						cleanWs()
@@ -65,6 +68,9 @@ pipeline {
                             sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building IG base docker image...\""""
 
                             def dockerBaseImage = docker.build("${baseImageName}", ".")
+                            def igImageName = dockerImage.id
+
+                            sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Base Image ID: ${igImageName}\""""
 
                             docker.withRegistry('', "${registryCredential}") {
                                 dockerBaseImage.push()
