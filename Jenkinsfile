@@ -12,7 +12,7 @@ pipeline {
         string(name: 'baseImageName', defaultValue: '', description: '')
         booleanParam(
             name: 'RebuildBaseImage',
-            defaultValue: true,
+            defaultValue: false,
             description: "Whether to rebuild the base image"
         )
         // choice(
