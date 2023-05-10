@@ -64,8 +64,8 @@ pipeline {
             steps {
                 script {
 
-                    def applicationRepo = "${env.WORKSPACE}/identity-gateway/application"
-                    def baseImageRepo = "${env.WORKSPACE}/identity-gateway/os"
+                    def applicationRepo = "${env.WORKSPACE}/identity-gateway/ig-application"
+                    def baseImageRepo = "${env.WORKSPACE}/identity-gateway/ig-baseimage"
 
                     dir("${baseImageRepo}"){
 
