@@ -12,8 +12,8 @@
 #  for production deployments.
 # =============================================================================================================
 #
-# FROM __BASEIMAGE_NAME__
-FROM gcr.io/forgerock-io/java-11:latest
+FROM __BASEIMAGE_NAME__
+# FROM gcr.io/forgerock-io/java-11:latest
 #
 # Default install directory for IG. Override this to set a different location.
 #

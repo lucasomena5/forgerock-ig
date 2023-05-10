@@ -67,34 +67,38 @@ pipeline {
                     def applicationRepo = "${env.WORKSPACE}/identity-gateway/application"
                     def baseImageRepo = "${env.WORKSPACE}/identity-gateway/os"
 
-                    dir("${applicationRepo}"){
+                    dir("${baseImageRepo}"){
 
                         sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build IG docker image...\""""
-                        //sh """sed -i 's/__BASE_IMAGE_NAME__//g' ${applicationRepo}/Dockerfile"""
-                        
-                        def dockerImage = docker.build("${repoName}/ig:v${BUILD_NUMBER}", ".")
+                        def dockerImage = docker.build("${repoName}/forgerock-temurin:11", ".")
                         def baseImageName = dockerImage.id
-                        sh "echo ${baseImageName}"
 
-                        // docker.withRegistry('', "${registryCredential}") {
-                        //     dockerImage.push()
-                        // }
+                        sh "echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` IG Base Image ID: ${baseImageName}\""""
+
+                        docker.withRegistry('', "${registryCredential}") {
+                            dockerImage.push()
+                        }
                         
                         sh "docker images"
                     }
 
-                    // dir("${baseImageRepo}"){
+                    dir("${applicationRepo}"){
 
-                    //     sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build IG docker image...\""""
-                    //     def dockerImage = docker.build("${repoName}/forgerock-temurin:11", ".")
-                    //     def baseImageName = dockerImage.id()
-
-                    //     docker.withRegistry('', "${registryCredential}") {
-                    //         dockerImage.push()
-                    //     }
+                        sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build IG docker image...\""""
+                        sh """sed -i 's/__BASEIMAGE_NAME__/${baseImageName}/g' ${applicationRepo}/Dockerfile"""
                         
-                    //     sh "docker images"
-                    // }
+                        def dockerImage = docker.build("${repoName}/ig:v${BUILD_NUMBER}", ".")
+                        def igImageName = dockerImage.id
+                        sh "echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` IG Application Image ID: ${igImageName}\""""
+
+                        docker.withRegistry('', "${registryCredential}") {
+                            dockerImage.push()
+                        }
+                        
+                        sh "docker images"
+                    }
+
+                    
                 }
             }
         }
