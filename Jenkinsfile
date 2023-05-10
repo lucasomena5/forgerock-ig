@@ -97,9 +97,9 @@ pipeline {
                             sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build IG docker image...\""""
 
                             def dockerImage = docker.build("${repoName}/ig-temurin:v${BUILD_NUMBER}", ".")
-                            def igImageName = dockerImage.id
+                            def igApplicationImageName = dockerImage.id
 
-                            sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Image ID: ${igImageName}\""""
+                            sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Image ID: ${igApplicationImageName}\""""
 
                             docker.withRegistry('', "${registryCredential}") {
                                 dockerImage.push()
