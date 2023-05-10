@@ -60,48 +60,65 @@ pipeline {
 		    }
 		}
         
-        stage('Build Docker Image') {
+        stage('Build Base Image') {
             steps {
                 script {
+                    try {
 
-                    def igApplicationRepo = "${env.WORKSPACE}/identity-gateway/ig-application"
-                    def baseImageRepo = "${env.WORKSPACE}/identity-gateway/ig-baseimage"
-                    sh "cat ${baseImageRepo}/Dockerfile"
+                        def baseImageRepo = "${env.WORKSPACE}/identity-gateway/ig-baseimage"
+                        sh "cat ${baseImageRepo}/Dockerfile"
 
-                    dir("${baseImageRepo}"){
+                        dir("${baseImageRepo}"){
 
-                        sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building IG base docker image...\""""
-                        
-                        def dockerBaseImage = docker.build("${repoName}/forgerock-temurin:11", ".")
-                        def baseImageName = dockerBaseImage.id
+                            sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building IG base docker image...\""""
 
-                        sh "echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` IG Base Image ID: ${baseImageName}\""""
+                            def dockerBaseImage = docker.build("${repoName}/forgerock-temurin:11", ".")
+                            def baseImageName = dockerBaseImage.id
 
-                        docker.withRegistry('', "${registryCredential}") {
-                            dockerBaseImage.push()
+                            sh "echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` IG Base Image ID: ${baseImageName}\""""
+
+                            docker.withRegistry('', "${registryCredential}") {
+                                dockerBaseImage.push()
+                            }
+
+                            sh "docker images"
                         }
-                        
-                        sh "docker images"
+                    } catch (Exception e) {
+                        currentBuild.result = 'FAILURE'
+                        throw e
                     }
-
-                    dir("${igApplicationRepo}"){
-
-                        sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build IG docker image...\""""
-                        sh """sed -i 's/__BASEIMAGE_NAME__/${baseImageName}/g' Dockerfile"""
-                        
-                        def dockerImage = docker.build("${repoName}/ig:v${BUILD_NUMBER}", ".")
-                        def igImageName = dockerImage.id
-                        
-                        sh "echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` IG Application Image ID: ${igImageName}\""""
-
-                        docker.withRegistry('', "${registryCredential}") {
-                            dockerImage.push()
-                        }
-                        
-                        sh "docker images"
-                    }
-
                     
+                }
+            }
+        }
+
+        stage('Build IG Image') {
+            steps {
+                script {
+                    try {
+                        def igApplicationRepo = "${env.WORKSPACE}/identity-gateway/ig-application"
+
+                        dir("${igApplicationRepo}"){
+
+                            sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build IG docker image...\""""
+                            sh """sed -i 's/__BASEIMAGE_NAME__/${repoName}\/forgerock-temurin\:11/g' Dockerfile"""
+
+                            def dockerImage = docker.build("${repoName}/ig:v${BUILD_NUMBER}", ".")
+                            def igImageName = dockerImage.id
+
+                            sh "echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` IG Application Image ID: ${igImageName}\""""
+
+                            docker.withRegistry('', "${registryCredential}") {
+                                dockerImage.push()
+                            }
+
+                            sh "docker images"
+                        }
+                    } catch (Exception e) {
+                        currentBuild.result = 'FAILURE'
+                        throw e
+                    }
+
                 }
             }
         }
