@@ -75,13 +75,15 @@ pipeline {
                             sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building IG base docker image...\""""
 
                             def dockerBaseImage = docker.build("${repoName}/forgerock-temurin:11", ".")
-                            def baseImageName = dockerBaseImage.id
+                            //def baseImageName = dockerBaseImage.id
 
-                            sh "echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` IG Base Image ID: ${baseImageName}\""""
+                            //sh "echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` IG Base Image ID: ${baseImageName}\""""
 
-                            // docker.withRegistry('', "${registryCredential}") {
-                            //     dockerBaseImage.push()
-                            // }
+                            docker.withRegistry('', "${registryCredential}") {
+                                dockerBaseImage.push()
+                            }
+
+                            sh "docker images"
                         }
 
                         dir("${igApplicationRepo}"){
