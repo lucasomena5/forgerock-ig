@@ -66,7 +66,8 @@ pipeline {
 
                     def igApplicationRepo = "${env.WORKSPACE}/identity-gateway/ig-application"
                     def baseImageRepo = "${env.WORKSPACE}/identity-gateway/ig-baseimage"
-
+                    sh "cat ${baseImageRepo}/Dockerfile"
+                    
                     dir("${baseImageRepo}"){
 
                         sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building IG base docker image...\""""
