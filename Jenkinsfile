@@ -46,7 +46,7 @@ pipeline {
             
 		    steps {
                 script {
-                    sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Checking pre-requisites...\""""
+                    echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Checking pre-requisites...\""""
 			     
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         sh '''docker login -u $USERNAME -p $PASSWORD'''
@@ -61,16 +61,16 @@ pipeline {
                 script {
                     try {
 
-                        sh "cat ${baseImageRepo}/Dockerfile"
+                        echo "cat ${baseImageRepo}/Dockerfile"
 
                         dir("${baseImageRepo}"){
 
-                            sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building IG base docker image...\""""
+                            echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building IG base docker image...\""""
 
                             def dockerBaseImage = docker.build("${baseImageName}", ".")
                             def igImageName = dockerImage.id
 
-                            sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Base Image ID: ${igImageName}\""""
+                            echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Base Image ID: ${igImageName}\""""
 
                             docker.withRegistry('', "${registryCredential}") {
                                 dockerBaseImage.push()
@@ -94,12 +94,12 @@ pipeline {
                     try {
                         dir("${igApplicationRepo}"){
 
-                            sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build IG docker image...\""""
+                            echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build IG docker image...\""""
 
                             def dockerImage = docker.build("${repoName}/ig-temurin:v${BUILD_NUMBER}", ".")
                             def igApplicationImageName = dockerImage.id
 
-                            sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Image ID: ${igApplicationImageName}\""""
+                            echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Image ID: ${igApplicationImageName}\""""
 
                             docker.withRegistry('', "${registryCredential}") {
                                 dockerImage.push()
