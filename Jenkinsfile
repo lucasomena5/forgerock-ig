@@ -93,6 +93,8 @@ pipeline {
                             def dockerImage = docker.build("${repoName}/ig-temurin:v${BUILD_NUMBER}", ".")
                             def igImageName = dockerImage.id
 
+                            sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Image ID: ${igImageName}\""""
+
                             docker.withRegistry('', "${registryCredential}") {
                                 dockerImage.push()
                             }
