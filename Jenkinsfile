@@ -77,7 +77,7 @@ pipeline {
 
                         sh "echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` IG Base Image ID: ${baseImageName}\""""
 
-                        docker.withRegistry("${repoName}/forgerock-temurin:11", "${registryCredential}") {
+                        docker.withRegistry('', "${registryCredential}") {
                             dockerBaseImage.push()
                         }
                         
@@ -106,10 +106,10 @@ pipeline {
             }
         }
 
-        stage('Remove Unused Image') {
-          steps{
-            sh "docker rmi ${repoName}/ig:v${BUILD_NUMBER}"
-          }
-        }
+        // stage('Remove Unused Image') {
+        //   steps{
+        //     sh "echo 'Removing old images'"
+        //   }
+        // }
     }
 }
