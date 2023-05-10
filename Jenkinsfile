@@ -26,7 +26,8 @@ pipeline {
 	environment {
         dockerCredential = credentials('docker-hub-credentials')
         gitHubCredential = credentials('jenkins_prudential_key')
-        repoName = "devforge1"
+        registry = "devforge1"
+        registryCredential = 'docker-hub-credentials'
     }
     
     stages {
@@ -86,12 +87,10 @@ pipeline {
                         sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build IG docker image...\""""
                         def dockerImage = docker.build("${repoName}/ig:v${BUILD_NUMBER}", ".")
 
-                        withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                            sh '''docker login -u $USERNAME -p $PASSWORD'''
-                            docker.withRegistry("https://docker.io/${repoName}", 'docker-hub-credentials') {
-                                dockerImage.push()
-                            }
+                        docker.withRegistry('', "${registryCredential}") {
+                            dockerImage.push()
                         }
+                        
                         
 
                     //sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building application base image...\""""
