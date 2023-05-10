@@ -84,8 +84,6 @@ pipeline {
                     dir("${applicationRepo}"){
 
                         sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build docker image...\""""
-                    
-                        sh "cat ${applicationRepo}/Dockerfile"
                         def dockerImage = docker.build("ig:v${BUILD_NUMBER}", ".")
                     
                     // docker.withRegistry('devforge1', 'docker-hub-credentials') {
@@ -96,7 +94,7 @@ pipeline {
                     
                     //sh """cat ${env.WORKSPACE}/identity-gateway/application/Dockerfile"""
                     //sh """ls -lha """
-                        sh "docker ps -a"
+                        sh "docker images"
                     //sh """docker build ${env.WORKSPACE}/identity-gateway/application/Dockerfile -t ig:v${BUILD_NUMBER}"""
                     //sh "docker tag ig:v${BUILD_NUMBER} ${repoName}/ig:v${BUILD_NUMBER}"
                     //sh "docker ps -a"
