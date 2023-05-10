@@ -15,7 +15,6 @@ pipeline {
         baseImageRepo = "${env.WORKSPACE}/identity-gateway/ig-baseimage"
         igApplicationRepo = "${env.WORKSPACE}/identity-gateway/ig-application"
         baseImageName = "${repoName}/forgerock-temurin:11"
-        igApplicationRepo = "${env.WORKSPACE}/identity-gateway/ig-application"
     }
     
     stages {
