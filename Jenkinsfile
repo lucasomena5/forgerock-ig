@@ -64,12 +64,12 @@ pipeline {
             steps {
                 script {
 
-                    def applicationRepo = "${env.WORKSPACE}/identity-gateway/ig-application"
+                    def igApplicationRepo = "${env.WORKSPACE}/identity-gateway/ig-application"
                     def baseImageRepo = "${env.WORKSPACE}/identity-gateway/ig-baseimage"
 
                     dir("${baseImageRepo}"){
 
-                        sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build IG docker image...\""""
+                        sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building IG base docker image...\""""
                         def dockerImage = docker.build("${repoName}/forgerock-temurin:11", ".")
                         def baseImageName = dockerImage.id
 
@@ -82,10 +82,10 @@ pipeline {
                         sh "docker images"
                     }
 
-                    dir("${applicationRepo}"){
+                    dir("${igApplicationRepo}"){
 
                         sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build IG docker image...\""""
-                        sh """sed -i 's/__BASEIMAGE_NAME__/${baseImageName}/g' ${applicationRepo}/Dockerfile"""
+                        sh """sed -i 's/__BASEIMAGE_NAME__/${baseImageName}/g' ${igApplicationRepo}/Dockerfile"""
                         
                         def dockerImage = docker.build("${repoName}/ig:v${BUILD_NUMBER}", ".")
                         def igImageName = dockerImage.id
