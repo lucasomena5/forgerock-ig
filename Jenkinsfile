@@ -68,9 +68,9 @@ pipeline {
                             echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building IG base docker image...\""""
 
                             def dockerBaseImage = docker.build("${baseImageName}", ".")
-                            def igImageName = dockerImage.id
+                            //def igImageName = dockerImage.id
 
-                            echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Base Image ID: ${igImageName}\""""
+                            //echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Base Image ID: ${igImageName}\""""
 
                             docker.withRegistry('', "${registryCredential}") {
                                 dockerBaseImage.push()
@@ -97,9 +97,9 @@ pipeline {
                             echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build IG docker image...\""""
 
                             def dockerImage = docker.build("${repoName}/ig-temurin:v${BUILD_NUMBER}", ".")
-                            def igApplicationImageName = dockerImage.id
+                            //def igApplicationImageName = dockerImage.id
 
-                            echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Image ID: ${igApplicationImageName}\""""
+                            //echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Image ID: ${igApplicationImageName}\""""
 
                             docker.withRegistry('', "${registryCredential}") {
                                 dockerImage.push()
