@@ -107,9 +107,9 @@ pipeline {
                             echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build IG docker image...\""""
 
                             if (params.RebuildBaseImage == false) {
-                                sh """sed -i \"s/\# FROM devforge1/forgerock-temurin:11/FROM devforge1/forgerock-temurin:11\" Dockerfile"""
+                                sh """sed -i \"s/# FROM devforge1/forgerock-temurin:11/FROM devforge1/forgerock-temurin:11\" Dockerfile"""
                             } else {
-                                sh """sed -i \"s/\# FROM __BASEIMAGE_NAME__/${repoName}\/${baseImageName}\" Dockerfile"""
+                                sh """sed -i \"s/# FROM __BASEIMAGE_NAME__/${repoName}\/${baseImageName}\" Dockerfile"""
                             }
                             
                             def dockerImage = docker.build("${repoName}/ig-temurin:v${BUILD_NUMBER}", ".")
