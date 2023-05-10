@@ -77,7 +77,7 @@ pipeline {
 
                             def dockerBaseImage = docker.build("${baseImageName}", ".")
 
-                            sh "echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` IG Base Image ID: ${baseImageName}\""""
+                            //sh "echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` IG Base Image ID: ${baseImageName}\""""
 
                             docker.withRegistry('', "${registryCredential}") {
                                 dockerBaseImage.push()
@@ -85,7 +85,7 @@ pipeline {
 
                             sh "docker images"
                         }
-                        
+
                     } catch (Exception e) {
                         currentBuild.result = 'FAILURE'
                         throw e
