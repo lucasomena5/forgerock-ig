@@ -29,7 +29,7 @@ pipeline {
         stage('Initialization') {
             steps {
                 script {
-                    export repoName="${params.PARAM_NAME}"
+                    def repoName = "${params.RepoName}"
 					
                     echo """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Clean Workspace ...\""""
 					
