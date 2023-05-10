@@ -9,6 +9,7 @@ pipeline {
     agent any
     parameters {
         string(name: 'repoName', defaultValue: '', description: 'Artifact Repository')
+        string(name: 'baseImageName', defaultValue: '', description: 'Base Image name')
         choice(
             name: 'RebuildBaseImage',
             choices: ['yes', 'no'],
@@ -21,7 +22,8 @@ pipeline {
         registryCredential = 'docker-hub-credentials'
         baseImageRepo = "${env.WORKSPACE}/identity-gateway/ig-baseimage"
         igApplicationRepo = "${env.WORKSPACE}/identity-gateway/ig-application"
-        baseImageName = "forgerock-temurin:11"
+        //baseImageName = "forgerock-temurin:11"
+        //repoName = "devforge1"
     }
     
     stages {
@@ -77,7 +79,7 @@ pipeline {
 
                             echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building IG base docker image...\""""
 
-                            def dockerBaseImage = docker.build("${params.repoName}/${baseImageName}", ".")
+                            def dockerBaseImage = docker.build("${repoName}/${baseImageName}", ".")
 
                             docker.withRegistry('', "${registryCredential}") {
                                 dockerBaseImage.push()
