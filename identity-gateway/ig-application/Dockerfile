@@ -12,7 +12,7 @@
 #  for production deployments.
 # =============================================================================================================
 #
-# FROM __BASEIMAGE_NAME__
+FROM __BASEIMAGE_NAME__
 # FROM devforge1/forgerock-temurin:11
 # FROM gcr.io/forgerock-io/java-11:latest
 #
