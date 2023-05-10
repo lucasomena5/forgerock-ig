@@ -82,14 +82,12 @@ pipeline {
 
                     sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build docker image...\""""
                     
-                    def dockerImage = docker.build('ig', "--file ${applicationRepo}/Dockerfile")
+                    def dockerImage = docker.build("ig:v${BUILD_NUMBER}", "${applicationRepo}/Dockerfile")
                     
                     // docker.withRegistry('devforge1', 'docker-hub-credentials') {
                     //     dockerImage.push()
                     // }
 
-                    
-        
                     sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building application base image...\""""
                     
                     //sh """cat ${env.WORKSPACE}/identity-gateway/application/Dockerfile"""
