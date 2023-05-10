@@ -82,8 +82,6 @@ pipeline {
                             // docker.withRegistry('', "${registryCredential}") {
                             //     dockerBaseImage.push()
                             // }
-
-                            sh "docker images"
                         }
 
                         dir("${igApplicationRepo}"){
