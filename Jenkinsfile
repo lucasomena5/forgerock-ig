@@ -1,17 +1,7 @@
 properties(
 	[
 		buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '10')), 
-        disableConcurrentBuilds(),
-		// parameters(
-		// 	[
-		// 		choice(
-		// 			choices: 
-		// 			[''], 
-		// 			description: 'Select the version', 
-		// 			name: 'VERSION'
-		// 		)
-		// 	]
-		// )
+        disableConcurrentBuilds()
 	]
 )
 
@@ -22,6 +12,10 @@ pipeline {
         gitHubCredential = credentials('jenkins_prudential_key')
         repoName = "devforge1"
         registryCredential = 'docker-hub-credentials'
+        baseImageRepo = "${env.WORKSPACE}/identity-gateway/ig-baseimage"
+        igApplicationRepo = "${env.WORKSPACE}/identity-gateway/ig-application"
+        baseImageName = "${repoName}/forgerock-temurin:11"
+        igApplicationRepo = "${env.WORKSPACE}/identity-gateway/ig-application"
     }
     
     stages {
@@ -30,7 +24,7 @@ pipeline {
             steps {
                 script {
 				
-					echo "Clean Workspace ..."
+					echo """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Clean Workspace ...\""""
 					ws(WORKSPACE) {
 						cleanWs()
 					}
@@ -65,10 +59,6 @@ pipeline {
                 script {
                     try {
 
-                        def baseImageRepo = "${env.WORKSPACE}/identity-gateway/ig-baseimage"
-                        def igApplicationRepo = "${env.WORKSPACE}/identity-gateway/ig-application"
-                        def baseImageName  = "${repoName}/forgerock-temurin:11"
-
                         sh "cat ${baseImageRepo}/Dockerfile"
 
                         dir("${baseImageRepo}"){
@@ -97,13 +87,11 @@ pipeline {
             steps {
                 script {
                     try {
-                        def igApplicationRepo = "${env.WORKSPACE}/identity-gateway/ig-application"
-
                         dir("${igApplicationRepo}"){
 
                             sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build IG docker image...\""""
 
-                            def dockerImage = docker.build("${repoName}/ig:v${BUILD_NUMBER}", ".")
+                            def dockerImage = docker.build("${repoName}/ig-temurin:v${BUILD_NUMBER}", ".")
                             def igImageName = dockerImage.id
 
                             docker.withRegistry('', "${registryCredential}") {
