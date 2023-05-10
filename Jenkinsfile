@@ -121,5 +121,19 @@ pipeline {
                 }
             }
         }
+
+        stage('Remove Unused Images') {
+            steps {
+                script {
+                    try {
+                        sh "docker system prune --force --all"
+                    } catch (Exception e) {
+                        currentBuild.result = 'FAILURE'
+                        throw e
+                    }
+
+                }
+            }
+        }
     }
 }
