@@ -101,7 +101,7 @@ pipeline {
                         dir("${igApplicationRepo}"){
 
                             sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build IG docker image...\""""
-                            sh """sed -i 's/__BASEIMAGE_NAME__/${repoName}/forgerock-temurin\:11/g' Dockerfile"""
+                            sh """sed -i 's/__BASEIMAGE_NAME__/${repoName}/forgerock-temurin:11/g' Dockerfile"""
 
                             def dockerImage = docker.build("${repoName}/ig:v${BUILD_NUMBER}", ".")
                             def igImageName = dockerImage.id
