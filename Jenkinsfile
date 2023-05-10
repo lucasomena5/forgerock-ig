@@ -8,12 +8,16 @@ properties(
 pipeline {
     agent any
     parameters {
-        string(name: 'RepoName', defaultValue: '', description: 'Artifact Repository')
+        string(name: 'RepoName', defaultValue: '', description: 'Artifact Repository'),
+        choice(
+            name: 'RebuildBaseImage',
+            choices: ['yes', 'no'],
+            description: "Choose 'no' to skip build Base Image step"
+        )
     }
 	environment {
         dockerCredential = credentials('docker-hub-credentials')
         gitHubCredential = credentials('jenkins_prudential_key')
-        repoName = "devforge1"
         registryCredential = 'docker-hub-credentials'
         baseImageRepo = "${env.WORKSPACE}/identity-gateway/ig-baseimage"
         igApplicationRepo = "${env.WORKSPACE}/identity-gateway/ig-application"
@@ -25,9 +29,11 @@ pipeline {
         stage('Initialization') {
             steps {
                 script {
-                    echo "Value of parameter PARAM_NAME is: ${params.PARAM_NAME}"
-					echo """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Clean Workspace ...\""""
-					ws(WORKSPACE) {
+                    export repoName="${params.PARAM_NAME}"
+					
+                    echo """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Clean Workspace ...\""""
+					
+                    ws(WORKSPACE) {
 						cleanWs()
 					}
 
@@ -57,6 +63,11 @@ pipeline {
 		}
         
         stage('Build Base Image') {
+            when {
+                expression {
+                    params.RebuildBaseImage == 'yes'
+                }
+            }
             steps {
                 script {
                     try {
@@ -68,9 +79,6 @@ pipeline {
                             echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building IG base docker image...\""""
 
                             def dockerBaseImage = docker.build("${baseImageName}", ".")
-                            //def igImageName = dockerImage.id
-
-                            //echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Base Image ID: ${igImageName}\""""
 
                             docker.withRegistry('', "${registryCredential}") {
                                 dockerBaseImage.push()
@@ -97,9 +105,6 @@ pipeline {
                             echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build IG docker image...\""""
 
                             def dockerImage = docker.build("${repoName}/ig-temurin:v${BUILD_NUMBER}", ".")
-                            //def igApplicationImageName = dockerImage.id
-
-                            //echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Image ID: ${igApplicationImageName}\""""
 
                             docker.withRegistry('', "${registryCredential}") {
                                 dockerImage.push()
