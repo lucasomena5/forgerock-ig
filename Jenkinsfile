@@ -10,11 +10,16 @@ pipeline {
     parameters {
         string(name: 'repoName', defaultValue: '', description: '')
         string(name: 'baseImageName', defaultValue: '', description: '')
-        choice(
+        booleanParam(
             name: 'RebuildBaseImage',
-            choices: ['yes', 'no'],
-            description: "Choose 'no' to skip build Base Image step"
+            defaultValue: true,
+            description: "Select this option to skip build Base Image"
         )
+        // choice(
+        //     name: '',
+        //     choices: ['yes', 'no'],
+        //     description: "Choose 'no' to skip build Base Image step"
+        // )
     }
 	environment {
         dockerCredential = credentials('docker-hub-credentials')
