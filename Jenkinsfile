@@ -1,15 +1,15 @@
 properties(
 	[
 		buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '10')), 
-        disableConcurrentBuilds(),
-        parameters {
-            string(name: 'Repo', defaultValue: '', value: 'repoName',description: 'Artifact repository')
-        }
+        disableConcurrentBuilds()
 	]
 )
 
 pipeline {
     agent any
+    parameters {
+        string(name: 'RepoName', defaultValue: '', description: 'Artifact Repository')
+    }
 	environment {
         dockerCredential = credentials('docker-hub-credentials')
         gitHubCredential = credentials('jenkins_prudential_key')
@@ -25,7 +25,7 @@ pipeline {
         stage('Initialization') {
             steps {
                 script {
-                    sh """echo ${repoName}"""
+                    echo "Value of parameter PARAM_NAME is: ${params.PARAM_NAME}"
 					echo """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Clean Workspace ...\""""
 					ws(WORKSPACE) {
 						cleanWs()
