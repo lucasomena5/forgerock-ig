@@ -82,6 +82,7 @@ pipeline {
 
                     sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build docker image...\""""
                     
+                    sh "cat ${applicationRepo}/Dockerfile"
                     def dockerImage = docker.build("ig:v${BUILD_NUMBER}", "${applicationRepo}/Dockerfile")
                     
                     // docker.withRegistry('devforge1', 'docker-hub-credentials') {
