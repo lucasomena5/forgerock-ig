@@ -8,8 +8,8 @@ properties(
 pipeline {
     agent any
     parameters {
-        string(name: 'repoName', defaultValue: '', description: '')
-        string(name: 'baseImageName', defaultValue: '', description: '')
+        string(name: 'repoName', defaultValue: '', description: 'i.e. devforge1')
+        string(name: 'baseImageName', defaultValue: '', description: 'i.e. forgerock-temurin:11')
         booleanParam(
             name: 'RebuildBaseImage',
             defaultValue: false,
@@ -27,8 +27,6 @@ pipeline {
         registryCredential = 'docker-hub-credentials'
         baseImageRepo = "${env.WORKSPACE}/identity-gateway/ig-baseimage"
         igApplicationRepo = "${env.WORKSPACE}/identity-gateway/ig-application"
-        //baseImageName = "forgerock-temurin:11"
-        //repoName = "devforge1"
     }
     
     stages {
