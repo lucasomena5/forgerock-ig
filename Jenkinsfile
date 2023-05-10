@@ -77,7 +77,7 @@ pipeline {
 
                         sh "echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` IG Base Image ID: ${baseImageName}\""""
 
-                        docker.withRegistry('', "${registryCredential}") {
+                        docker.withRegistry("${repoName}/forgerock-temurin:11", "${registryCredential}") {
                             dockerBaseImage.push()
                         }
                         
