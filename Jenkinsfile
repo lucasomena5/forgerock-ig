@@ -8,7 +8,7 @@ properties(
 pipeline {
     agent any
     parameters {
-        string(name: 'RepoName', defaultValue: '', description: 'Artifact Repository'),
+        string(name: 'RepoName', defaultValue: '', description: 'Artifact Repository')
         choice(
             name: 'RebuildBaseImage',
             choices: ['yes', 'no'],
