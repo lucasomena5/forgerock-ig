@@ -77,8 +77,6 @@ pipeline {
 
                             def dockerBaseImage = docker.build("${baseImageName}", ".")
 
-                            //sh "echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` IG Base Image ID: ${baseImageName}\""""
-
                             docker.withRegistry('', "${registryCredential}") {
                                 dockerBaseImage.push()
                             }
@@ -107,8 +105,6 @@ pipeline {
 
                             def dockerImage = docker.build("${repoName}/ig:v${BUILD_NUMBER}", ".")
                             def igImageName = dockerImage.id
-
-                            sh "echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` IG Application Image ID: ${igImageName}\""""
 
                             docker.withRegistry('', "${registryCredential}") {
                                 dockerImage.push()
