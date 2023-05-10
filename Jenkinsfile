@@ -87,7 +87,7 @@ pipeline {
                         }
 
                         dir("${igApplicationRepo}"){
-                            sh """sed -i 's/__BASEIMAGE_NAME__/${baseImageName}/g' Dockerfile"""
+                            //sh """sed -i 's/__BASEIMAGE_NAME__/${baseImageName}/g' Dockerfile"""
                             sh "cat ${igApplicationRepo}/Dockerfile"
                         }
                     } catch (Exception e) {
