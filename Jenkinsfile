@@ -79,9 +79,9 @@ pipeline {
 
                             sh "echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` IG Base Image ID: ${baseImageName}\""""
 
-                            docker.withRegistry('', "${registryCredential}") {
-                                dockerBaseImage.push()
-                            }
+                            // docker.withRegistry('', "${registryCredential}") {
+                            //     dockerBaseImage.push()
+                            // }
 
                             sh "docker images"
                         }
@@ -128,11 +128,5 @@ pipeline {
                 }
             }
         }
-
-        // stage('Remove Unused Image') {
-        //   steps{
-        //     sh "echo 'Removing old images'"
-        //   }
-        // }
     }
 }
