@@ -2,22 +2,22 @@ properties(
 	[
 		buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '10')), 
         disableConcurrentBuilds(),
-		parameters(
-			[
-				choice(
-					choices: 
-					[''], 
-					description: 'Select the version', 
-					name: 'VERSION'
-				),
-				choice(
-					choices: 
-					[''], 
-					description: 'Select the application', 
-					name: 'APPLICATION'
-				),
-			]
-		)
+		// parameters(
+		// 	[
+		// 		choice(
+		// 			choices: 
+		// 			[''], 
+		// 			description: 'Select the version', 
+		// 			name: 'VERSION'
+		// 		),
+		// 		choice(
+		// 			choices: 
+		// 			[''], 
+		// 			description: 'Select the application', 
+		// 			name: 'APPLICATION'
+		// 		),
+		// 	]
+		// )
 	]
 )
 
@@ -81,13 +81,21 @@ pipeline {
                     def osRepo = "${env.WORKSPACE}/identity-gateway/os"
 
                     sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build docker image...\""""
+                    
+                    def dockerImage = docker.build('ig', "--file ${applicationRepo}/Dockerfile")
+                    
+                    // docker.withRegistry('devforge1', 'docker-hub-credentials') {
+                    //     dockerImage.push()
+                    // }
+
+                    
         
                     sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building application base image...\""""
                     
-                    sh """cat ${env.WORKSPACE}/identity-gateway/application/Dockerfile"""
-                    sh """ls -lha """
+                    //sh """cat ${env.WORKSPACE}/identity-gateway/application/Dockerfile"""
+                    //sh """ls -lha """
                     sh "docker ps -a"
-                    //sh "docker build ${applicationRepo}/Dockerfile -t ig:v${BUILD_NUMBER}"
+                    //sh """docker build ${env.WORKSPACE}/identity-gateway/application/Dockerfile -t ig:v${BUILD_NUMBER}"""
                     //sh "docker tag ig:v${BUILD_NUMBER} ${repoName}/ig:v${BUILD_NUMBER}"
                     //sh "docker ps -a"
                     //sh "docker push devforge1/ig:v${BUILD_NUMBER}"
