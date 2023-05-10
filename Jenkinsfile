@@ -67,6 +67,7 @@ pipeline {
 
                         def baseImageRepo = "${env.WORKSPACE}/identity-gateway/ig-baseimage"
                         def igApplicationRepo = "${env.WORKSPACE}/identity-gateway/ig-application"
+                        def baseImageName  = "${repoName}/forgerock-temurin:11"
 
                         sh "cat ${baseImageRepo}/Dockerfile"
 
@@ -74,10 +75,9 @@ pipeline {
 
                             sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building IG base docker image...\""""
 
-                            def dockerBaseImage = docker.build("${repoName}/forgerock-temurin:11", ".")
-                            //def baseImageName = dockerBaseImage.id
+                            def dockerBaseImage = docker.build("${baseImageName}", ".")
 
-                            //sh "echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` IG Base Image ID: ${baseImageName}\""""
+                            sh "echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` IG Base Image ID: ${baseImageName}\""""
 
                             docker.withRegistry('', "${registryCredential}") {
                                 dockerBaseImage.push()
@@ -87,7 +87,7 @@ pipeline {
                         }
 
                         dir("${igApplicationRepo}"){
-                            //sh """sed -i 's/__BASEIMAGE_NAME__/${baseImageName}/g' Dockerfile"""
+                            sh """sed -i 's/__BASEIMAGE_NAME__/${baseImageName}/g' Dockerfile"""
                             sh "cat ${igApplicationRepo}/Dockerfile"
                         }
                     } catch (Exception e) {
