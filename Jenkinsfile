@@ -86,7 +86,7 @@ pipeline {
                         sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build IG docker image...\""""
                         def dockerImage = docker.build("${repoName}/ig:v${BUILD_NUMBER}", ".")
                     
-                        docker.withRegistry('devforge1', 'docker-hub-credentials') {
+                        docker.withRegistry("${repoName}", 'docker-hub-credentials') {
                             dockerImage.push()
                         }
 
