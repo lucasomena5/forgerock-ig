@@ -67,17 +67,18 @@ pipeline {
                     def igApplicationRepo = "${env.WORKSPACE}/identity-gateway/ig-application"
                     def baseImageRepo = "${env.WORKSPACE}/identity-gateway/ig-baseimage"
                     sh "cat ${baseImageRepo}/Dockerfile"
-                    
+
                     dir("${baseImageRepo}"){
 
                         sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building IG base docker image...\""""
-                        def dockerImage = docker.build("${repoName}/forgerock-temurin:11", ".")
-                        def baseImageName = dockerImage.id
+                        
+                        def dockerBaseImage = docker.build("${repoName}/forgerock-temurin:11", ".")
+                        def baseImageName = dockerBaseImage.id
 
                         sh "echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` IG Base Image ID: ${baseImageName}\""""
 
                         docker.withRegistry('', "${registryCredential}") {
-                            dockerImage.push()
+                            dockerBaseImage.push()
                         }
                         
                         sh "docker images"
@@ -90,6 +91,7 @@ pipeline {
                         
                         def dockerImage = docker.build("${repoName}/ig:v${BUILD_NUMBER}", ".")
                         def igImageName = dockerImage.id
+                        
                         sh "echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` IG Application Image ID: ${igImageName}\""""
 
                         docker.withRegistry('', "${registryCredential}") {
@@ -104,10 +106,10 @@ pipeline {
             }
         }
 
-        // stage('Remove Unused docker image') {
-        //   steps{
-        //     sh "docker rmi ${repoName}/ig:v${BUILD_NUMBER}"
-        //   }
-        // }
+        stage('Remove Unused Image') {
+          steps{
+            sh "docker rmi ${repoName}/ig:v${BUILD_NUMBER}"
+          }
+        }
     }
 }
