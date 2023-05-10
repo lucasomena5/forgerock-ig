@@ -83,12 +83,12 @@ pipeline {
 
                     dir("${applicationRepo}"){
 
-                        sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build docker image...\""""
-                        def dockerImage = docker.build("ig:v${BUILD_NUMBER}", ".")
+                        sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build IG docker image...\""""
+                        def dockerImage = docker.build("${repoName}/ig:v${BUILD_NUMBER}", ".")
                     
-                    // docker.withRegistry('devforge1', 'docker-hub-credentials') {
-                    //     dockerImage.push()
-                    // }
+                        docker.withRegistry('devforge1', 'docker-hub-credentials') {
+                            dockerImage.push()
+                        }
 
                     //sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building application base image...\""""
                     
