@@ -9,13 +9,7 @@ properties(
 		// 			[''], 
 		// 			description: 'Select the version', 
 		// 			name: 'VERSION'
-		// 		),
-		// 		choice(
-		// 			choices: 
-		// 			[''], 
-		// 			description: 'Select the application', 
-		// 			name: 'APPLICATION'
-		// 		),
+		// 		)
 		// 	]
 		// )
 	]
@@ -65,46 +59,49 @@ pipeline {
                 
 		    }
 		}
-
-        // stage('Git Checkout') {
-        //     steps {
-        //         script {
-        //             git branch: "master",
-        //                 url: 'git@github.com:lucasomena5/forgerock-ig.git'
-        //         }
-        //     }
-        // }
         
         stage('Build Docker Image') {
             steps {
                 script {
 
                     def applicationRepo = "${env.WORKSPACE}/identity-gateway/application"
-                    def osRepo = "${env.WORKSPACE}/identity-gateway/os"
+                    def baseImageRepo = "${env.WORKSPACE}/identity-gateway/os"
 
                     dir("${applicationRepo}"){
 
                         sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build IG docker image...\""""
+                        //sh """sed -i 's/__BASE_IMAGE_NAME__//g' ${applicationRepo}/Dockerfile"""
+                        
                         def dockerImage = docker.build("${repoName}/ig:v${BUILD_NUMBER}", ".")
+                        def baseImageName = dockerImage.id()
 
-                        docker.withRegistry('', "${registryCredential}") {
-                            dockerImage.push()
-                        }
+                        // docker.withRegistry('', "${registryCredential}") {
+                        //     dockerImage.push()
+                        // }
                         
-                        
-
-                    //sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building application base image...\""""
-                    
-                    //sh """cat ${env.WORKSPACE}/identity-gateway/application/Dockerfile"""
-                    //sh """ls -lha """
                         sh "docker images"
-                    //sh """docker build ${env.WORKSPACE}/identity-gateway/application/Dockerfile -t ig:v${BUILD_NUMBER}"""
-                    //sh "docker tag ig:v${BUILD_NUMBER} ${repoName}/ig:v${BUILD_NUMBER}"
-                    //sh "docker ps -a"
-                    //sh "docker push devforge1/ig:v${BUILD_NUMBER}"
                     }
+
+                    // dir("${baseImageRepo}"){
+
+                    //     sh """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build IG docker image...\""""
+                    //     def dockerImage = docker.build("${repoName}/forgerock-temurin:11", ".")
+                    //     def baseImageName = dockerImage.id()
+
+                    //     docker.withRegistry('', "${registryCredential}") {
+                    //         dockerImage.push()
+                    //     }
+                        
+                    //     sh "docker images"
+                    // }
                 }
             }
         }
+
+        // stage('Remove Unused docker image') {
+        //   steps{
+        //     sh "docker rmi ${repoName}/ig:v${BUILD_NUMBER}"
+        //   }
+        // }
     }
 }
