@@ -71,7 +71,7 @@ pipeline {
         stage('Build Base Image') {
             when {
                 expression {
-                    params.RebuildBaseImage == 'yes'
+                    params.RebuildBaseImage == true
                 }
             }
             steps {
