@@ -59,7 +59,7 @@ pipeline {
                 script {
                     echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Checking pre-requisites...\""""
 			     
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    withCredentials([usernamePassword(credentialsId: "${registryCredential}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         sh '''docker login -u $USERNAME -p $PASSWORD'''
                     }
                 }
