@@ -1,8 +1,8 @@
 properties(
-	[
-		buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '10')), 
+    [
+        buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '10')),
         disableConcurrentBuilds()
-	]
+    ]
 )
 
 pipeline {
@@ -13,15 +13,15 @@ pipeline {
         booleanParam(
             name: 'RebuildBaseImage',
             defaultValue: false,
-            description: "Whether to rebuild the base image"
+            description: 'Whether to rebuild the base image'
         )
-        // choice(
-        //     name: '',
-        //     choices: ['yes', 'no'],
-        //     description: "Choose 'no' to skip build Base Image step"
-        // )
+    // choice(
+    //     name: '',
+    //     choices: ['yes', 'no'],
+    //     description: "Choose 'no' to skip build Base Image step"
+    // )
     }
-	environment {
+    environment {
         dockerCredential = credentials('docker-hub-credentials')
         gitHubCredential = credentials('jenkins_prudential_key')
         registryCredential = 'docker-hub-credentials'
@@ -29,23 +29,20 @@ pipeline {
         baseImageRepo = "${env.WORKSPACE}/identity-gateway/ig-baseimage"
         igApplicationRepo = "${env.WORKSPACE}/identity-gateway/ig-application"
     }
-    
-    stages {
 
+    stages {
         stage('Initialization') {
             steps {
                 script {
-					
                     echo """echo \"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Clean Workspace ...\""""
-					
+
                     ws(WORKSPACE) {
-						cleanWs()
-					}
+                        cleanWs()
+                    }
 
-					String buildID = "#${BUILD_NUMBER} - product".toString()
+                    String buildID = "#${BUILD_NUMBER} - product".toString()
 
-					currentBuild.displayName = buildID
-					
+                    currentBuild.displayName = buildID
                 }
             }
         }
@@ -54,19 +51,18 @@ pipeline {
             when {
                 expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
             }
-            
-		    steps {
+
+            steps {
                 script {
                     echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Checking pre-requisites...\""""
-			     
+
                     withCredentials([usernamePassword(credentialsId: "${registryCredential}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         sh '''docker login -u $USERNAME -p $PASSWORD'''
                     }
                 }
-                
-		    }
-		}
-        
+            }
+        }
+
         stage('Build Base Image') {
             when {
                 expression { params.RebuildBaseImage == true }
@@ -74,27 +70,23 @@ pipeline {
             steps {
                 script {
                     try {
-
                         echo "cat ${baseImageRepo}/Dockerfile"
 
-                        dir("${baseImageRepo}"){
-
+                        dir("${baseImageRepo}") {
                             echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building IG base docker image...\""""
 
-                            def dockerBaseImage = docker.build("${repoName}/${baseImageName}", ".")
+                            def dockerBaseImage = docker.build("${repoName}/${baseImageName}", '.')
 
                             docker.withRegistry('', "${registryCredential}") {
                                 dockerBaseImage.push()
                             }
 
-                            sh "docker images"
+                            sh 'docker images'
                         }
-
                     } catch (Exception e) {
                         currentBuild.result = 'FAILURE'
                         throw e
                     }
-                    
                 }
             }
         }
@@ -103,8 +95,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        dir("${igApplicationRepo}"){
-
+                        dir("${igApplicationRepo}") {
                             echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build IG docker image...\""""
 
                             if (params.RebuildBaseImage == false) {
@@ -112,20 +103,19 @@ pipeline {
                             } else {
                                 sh """sed -i 's/__BASEIMAGE_NAME__/${repoName}\\/${baseImageName}/g' Dockerfile"""
                             }
-                            
-                            def dockerImage = docker.build("${repoName}/ig-temurin:v1.${BUILD_NUMBER}", ".")
-                            
+
+                            def dockerImage = docker.build("${repoName}/ig-temurin:v1.${BUILD_NUMBER}", '.')
+
                             docker.withRegistry('', "${registryCredential}") {
                                 dockerImage.push()
                             }
 
-                            sh "docker images"
+                            sh 'docker images'
                         }
                     } catch (Exception e) {
                         currentBuild.result = 'FAILURE'
                         throw e
                     }
-
                 }
             }
         }
@@ -134,12 +124,11 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh "docker system prune --force --all"
+                        sh 'docker system prune --force --all'
                     } catch (Exception e) {
                         currentBuild.result = 'FAILURE'
                         throw e
                     }
-
                 }
             }
         }
