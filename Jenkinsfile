@@ -24,7 +24,8 @@ pipeline {
 	environment {
         dockerCredential = credentials('docker-hub-credentials')
         gitHubCredential = credentials('jenkins_prudential_key')
-        registryCredential = 'docker-hub-credentials'
+        //registryCredential = 'docker-hub-credentials'
+        registryCredential = 'prudential-docker-key'
         baseImageRepo = "${env.WORKSPACE}/identity-gateway/ig-baseimage"
         igApplicationRepo = "${env.WORKSPACE}/identity-gateway/ig-application"
     }
