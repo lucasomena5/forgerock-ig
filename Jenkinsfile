@@ -104,7 +104,7 @@ pipeline {
                                 sh """sed -i 's/__BASEIMAGE_NAME__/${repoName}\\/${baseImageName}/g' Dockerfile"""
                             }
 
-                            def dockerImage = docker.build("${repoName}/ig-temurin:v${BUILD_NUMBER}", '.')
+                            def dockerImage = docker.build("${repoName}/ig-temurin:v1.${BUILD_NUMBER}", '.')
 
                             docker.withRegistry('', "${registryCredential}") {
                                 dockerImage.push()
