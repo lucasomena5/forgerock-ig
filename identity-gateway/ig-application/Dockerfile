@@ -20,7 +20,7 @@ FROM __BASEIMAGE_NAME__
 #
 ENV INSTALL_DIR /opt/ig
 
-COPY config/routes/heatlh.json "$IG_INSTANCE_DIR"/config/routes/heatlh.json
+COPY ./config/routes/heatlh.json "$IG_INSTANCE_DIR"/config/routes/heatlh.json
 
 COPY --chown=forgerock:root . "${INSTALL_DIR}"
 #
