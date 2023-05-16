@@ -20,13 +20,13 @@ FROM __BASEIMAGE_NAME__
 #
 ENV INSTALL_DIR /opt/ig
 
-COPY ./config/routes/heatlh.json "$IG_INSTANCE_DIR"/config/routes/heatlh.json
-
 COPY --chown=forgerock:root . "${INSTALL_DIR}"
 #
 # Default home for IG config. Override this to set a different location.
 #
 ENV IG_INSTANCE_DIR /var/ig
+
+COPY ./config/routes/heatlh.json "$IG_INSTANCE_DIR"/config/routes/heatlh.json
 
 RUN mkdir -p "${IG_INSTANCE_DIR}" \
     && chown -R forgerock:root "${IG_INSTANCE_DIR}" "${INSTALL_DIR}" \

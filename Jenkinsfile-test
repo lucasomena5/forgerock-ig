@@ -70,7 +70,7 @@ pipeline {
                             
                             echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Building IG base docker image...\""""
 
-                            def dockerBaseImage = docker.build("${repoName}/${baseImageName}", 'Dockerfile-test')
+                            def dockerBaseImage = docker.build("${repoName}/${baseImageName}", 'Dockerfile')
 
                             docker.withRegistry('', "${registryCredential}") {
                                 dockerBaseImage.push()
@@ -94,9 +94,9 @@ pipeline {
                             echo """\"[INFO] `date '+%Y-%m-%d %H:%M:%S'` Build IG docker image...\""""
 
                             if (params.RebuildBaseImage == false) {
-                                sh """sed -i 's/__BASEIMAGE_NAME__/devforge1\\/forgerock-temurin:11/g' Dockerfile-test"""
+                                sh """sed -i 's/__BASEIMAGE_NAME__/devforge1\\/forgerock-temurin:11/g' Dockerfile"""
                             } else {
-                                sh """sed -i 's/__BASEIMAGE_NAME__/${repoName}\\/${baseImageName}/g' Dockerfile-test"""
+                                sh """sed -i 's/__BASEIMAGE_NAME__/${repoName}\\/${baseImageName}/g' Dockerfile"""
                             }
 
                             def dockerImage = docker.build("${repoName}/ig-temurin:v1.${BUILD_NUMBER}", '.')
