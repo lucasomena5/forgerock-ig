@@ -10,5 +10,5 @@
         "entity": "Health"
       }
     },
-    "condition": "${find(request.uri.path, '^/health')}"
+    "condition": "${find(request.uri.path, '^/${HEALTH_URI_PATH}')}"
   }

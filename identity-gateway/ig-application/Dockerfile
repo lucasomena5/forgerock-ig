@@ -12,9 +12,7 @@
 #  for production deployments.
 # =============================================================================================================
 #
-# FROM __BASEIMAGE_NAME__
-FROM devforge1/forgerock-temurin:11
-# FROM gcr.io/forgerock-io/java-11:latest
+FROM gcr.io/forgerock-io/java-11:latest
 #
 # Default install directory for IG. Override this to set a different location.
 #
@@ -26,13 +24,20 @@ COPY --chown=forgerock:root . "${INSTALL_DIR}"
 #
 ENV IG_INSTANCE_DIR /var/ig
 
-COPY ./config/routes/health.json "$IG_INSTANCE_DIR"/config/routes/health.json
-COPY ./config/routes/admin.json "$IG_INSTANCE_DIR"/config/routes/admin.json
-COPY ./config/routes/config.json "$IG_INSTANCE_DIR"/config/routes/config.json
+# SECRETS
+ENV HEALTH_URI_PATH health
+ENV HEAP_CONFIG_AGENT_PASSWORD password
 
 RUN mkdir -p "${IG_INSTANCE_DIR}" \
     && chown -R forgerock:root "${IG_INSTANCE_DIR}" "${INSTALL_DIR}" \
     && chmod -R g+rwx "${IG_INSTANCE_DIR}" "${INSTALL_DIR}"
+
+COPY ./config/health.json "$IG_INSTANCE_DIR"/config/health.json
+COPY ./config/admin.json "$IG_INSTANCE_DIR"/config/admin.json
+COPY ./config/config.json "$IG_INSTANCE_DIR"/config/config.json
+
+COPY ./config/routes/static-resources.json "$IG_INSTANCE_DIR"/config/routes/static-resources.json
+COPY ./config/routes/jwt-idc.json "$IG_INSTANCE_DIR"/config/routes/jwt-idc.json
 
 RUN apt-get -y update; apt-get install -y curl
 

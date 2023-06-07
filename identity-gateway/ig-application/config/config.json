@@ -41,7 +41,7 @@
             "realm": "/",
             "agent": {
                 "username": "ig-agent",
-                "password": "password"
+                "password": "${HEAP_CONFIG_AGENT_PASSWORD}"
             },
             "sessionCache": {
                 "enabled": true
