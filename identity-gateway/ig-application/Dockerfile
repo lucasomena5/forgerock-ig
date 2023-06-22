@@ -23,6 +23,7 @@ COPY --chown=forgerock:root . "${INSTALL_DIR}"
 # Default home for IG config. Override this to set a different location.
 #
 ENV IG_INSTANCE_DIR /var/ig
+ENV IG_INSTANCE_SECRETS_DIR /var/ig/secrets
 
 # SECRETS
 ENV HEALTH_URI_PATH health

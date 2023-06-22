@@ -3,7 +3,7 @@
     "condition": "${find(request.uri.path, '/jwt')}",
     "baseURI": "http://e6a11e6aa81c.mylabserver.com:8081",
     "properties": {
-      "secretsDir": "/var/ig/secrets",
+      "secretsDir": "${IG_INSTANCE_SECRETS_DIR}",
       "amInstanceUrl": "https://openam-acnemea20220519a.forgeblocks.com/am"
     },
     "heap": [
