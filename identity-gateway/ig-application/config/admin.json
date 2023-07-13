@@ -1,7 +1,7 @@
 {
   "mode": "DEVELOPMENT",
   "properties": {
-    "secretsDir": "${IG_INSTANCE_DIR}"
+    "secretsDir": "/var/ig/secrets"
   },
   "connectors": [
     {

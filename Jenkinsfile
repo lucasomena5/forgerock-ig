@@ -15,17 +15,11 @@ pipeline {
             defaultValue: false,
             description: 'Whether to rebuild the base image'
         )
-    // choice(
-    //     name: '',
-    //     choices: ['yes', 'no'],
-    //     description: "Choose 'no' to skip build Base Image step"
-    // )
     }
     environment {
         dockerCredential = credentials('docker-hub-credentials')
         gitHubCredential = credentials('jenkins_prudential_key')
         registryCredential = 'docker-hub-credentials'
-        //registryCredential = 'prudential-docker-key'
         baseImageRepo = "${env.WORKSPACE}/identity-gateway/ig-baseimage"
         igApplicationRepo = "${env.WORKSPACE}/identity-gateway/ig-application"
     }
